@@ -1,0 +1,1586 @@
+﻿<%@ Master Language="VB" CodeFile="PWMMaster.master.vb" Inherits="MasterPages_PWMMaster" %>
+
+<%--<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">--%>
+<!DOCTYPE html>
+<html>
+<head id="Head1" runat="server">
+    <title>Private Wealth Management</title>
+  <asp:ContentPlaceHolder ID="HeadContentX" runat="server">
+       
+    </asp:ContentPlaceHolder>
+  <%--  <script type="text/javascript" src="//www.google.com/jsapi"></script>
+    <script type="text/javascript">
+        google.load('visualization', '1', { packages: ['corechart'] });
+    </script>--%>
+<link rel="shortcut icon" href="../images/favicon.ico" />
+    <%--<meta http-equiv="X-UA-Compatible" content="IE=8; IE=7; IE=EDGE" />
+    <meta http-equiv="X-UA-Compatible" content="IE=5" />--%>
+    <script src="../Scripts/jquery-1.9.1.js" type="text/javascript"></script>
+    <script src="../Scripts/jquery-1.10.3.ui.js" type="text/javascript"></script>
+    <link href="../Content/jquery-1.10.3.ui.css" rel="stylesheet" />
+    <%-- <script src="../Scripts/NewMaster/jquery_js.js"></script>--%>
+    <script src="../Scripts/NewMaster/useradmin.js" type="text/javascript"></script>
+    <script src="../Scripts/NewMaster/slider/jquery.touchSwipe.min.js" type="text/javascript"></script>
+    <script src="../stylesheet/dropdown/ddaccordion.js" type="text/javascript"></script>
+    <script src="../Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="../Scripts/Comman.js" type="text/javascript"></script>
+    <script src="../Scripts/NewMaster/jquery.meanmenu.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../WebPageJScripts/DynamicModalpopDialog.js"></script>
+    <%--<script src="../Scripts/NewMaster/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>--%>
+    <script src="../Scripts/validate.js" type="text/javascript"></script>
+   
+
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+            jQuery('.menu-nav nav').meanmenu();
+        });
+        function myfilter(array, test) {
+            var passedTest = [];
+            for (var i = 0; i < array.length; i++) {
+                if (test(array[i]))
+                    passedTest.push(array[i]);
+            }
+
+            return passedTest;
+        }
+      
+
+        $(document).ready(function () {
+           
+             var arr = $('input[type=text]');
+             arr.each(function () { $(this).attr('autocomplete', 'off'); });
+             var FieldName = "";
+             //var FieldName =document.location.href.split('/')[document.location.href.split('/').length - 2] + "/" + document.location.href.split('/')[document.location.href.split('/').length - 1];
+                     $.ajax({
+                         type: "POST",
+                         contentType: "application/json; charset=utf-8",
+                         url: "../CommonWebServices/MasterBindings.aspx/GetPagelevelAccess",
+                         data: "{ FieldName: '" + FieldName + "'}",
+                         dataType: "json",
+                         async: false,
+                         success: function (data) {
+                             var tdata = jQuery.parseJSON(data.d);
+                             
+                             if (tdata.length > 0) {
+                                 $.each(tdata, function (i, item) {
+                                    
+                                     if (!(item.Authorization == false && item.Delete == false && item.Creation == false && item.Reversal == false)) {
+
+                                         
+                                         if (item.CategoryName == "Wealth Tracking Aggregator") {
+
+                                             if (item.MenuName == "Asset Masters") {
+                                                
+
+                                                 if (item.FieldName.toLowerCase().indexOf("edost") >= 0) {
+                                                     $("#WealthAggr_AssetMastersUL").append("<li><a href='https://" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                                 else {
+                                                     $("#WealthAggr_AssetMastersUL").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+
+                                             }
+
+                                             if (item.MenuName == "Prospect Management") {
+                                                 $("#WealthAggr_ProspectManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+
+                                             if (item.MenuName == "PMS Masters") {
+                                                 $("#WealthAggr_PMSMastersul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "GL Setup") {
+                                                 if (item.FieldName .toLowerCase().indexOf("edost") >= 0) {
+                                                     $("#WealthAggr_GLSetupul").append("<li><a href='https://" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                                 else {
+                                                     $("#WealthAggr_GLSetupul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                             }
+
+                                             if (item.MenuName == "Order entry - Discretionary") {
+                                                 $("#WealthInv_OrderentryDiscretionaryul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                            
+                                             //if (item.MenuName == "BO Transactions") {
+                                               
+                                             //    //$('<a />', {
+                                             //    //    href: '../'+item.FieldName,
+                                             //    //    text: item.Programe_Name
+                                             //    //}).wrap('<li />').parent().appendTo('#InvPlan_ClientReportUL');
+                                             //    var link = ""
+                                             //    if (item.FieldName .toLowerCase().indexOf("edost") >= 0) {
+                                             //        link = "<li><a href='hhtps://" + item.FieldName + "' target='_blank' >" + item.Programe_Name + "</a></li>"
+                                             //    }
+                                             //    else {
+                                             //        link = "<li><a href='" + item.FieldName + "' target='_blank' >" + item.Programe_Name + "</a></li>"
+                                             //    }
+                                             //    $("#InvPlan_ClientReportUL").append(link);
+                                             //}
+                                            
+                                            
+                                             if (item.MenuName == "General Masters") {
+                                                 $("#WealthAggr_GeneralMasterUL").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Geographical Masters") {
+                                                 $("#WealthAggr_GeographicalMastersul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Generic Authorize & Upload") {
+                                                 if (item.FieldName .toLowerCase().indexOf("edost") >= 0) {
+                                                     $("#WealthAggr_GenericAuthorizeul").append("<li><a href='https://" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                                 else {
+                                                     $("#WealthAggr_GenericAuthorizeul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                             }
+                                              if (item.MenuName == "Client Management") {
+                                                 $("#WealthAggr_ClientManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                              if (item.MenuName == "Order entry - Non discretionary") {
+                                                  if (item.FieldName.toLowerCase().indexOf("edost") >= 0) {
+                                                      $("#WealthAggr_Nondiscretionaryul").append("<li><a href='https://" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                  }
+                                                  else {
+                                                      $("#WealthAggr_Nondiscretionaryul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                  }
+                                             }
+                                              if (item.MenuName == "Mutual Fund") {
+                                                 $("#WealthAggr_MutualFundul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "User Management") {
+                                                 $("#WealthAggr_UserManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Call Management") {
+                                                 $("#Advisor_CallManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Prospect Management") {
+                                                 $("#Advisor_ProspectManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Wealth Investment Planning") {
+                                                 $("#WealthInv_Planingul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "BO Transactions") {
+
+                                                 if (item.FieldName .toLowerCase().indexOf("edost") >= 0) {
+                                                     $("#WealthAggr_BOTransactionsul").append("<li><a href='https://" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                                 else {
+                                                     $("#WealthAggr_BOTransactionsul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                                 
+                                             }
+                                             if (item.MenuName == "Inc & Exp Management") {
+                                                 $("#WealthTrackAggr_IncmeExpul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "MIS Reports") {
+                                                 $("#WealthAggr_MisReportsul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Brokerage") {
+                                                 $("#Brokerageul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             
+
+                                             
+                                         }
+
+
+
+
+
+                                         if (item.CategoryName == "Wealth Investment Planning") {
+                                             if (item.MenuName == "Client Input") {
+                                                 $("#InvPlan_ClientInputUL").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Client Review") {
+                                                 $("#InvPlan_ClientReviewUL").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Client Report") {
+                                                 $("#InvPlan_ClientReportUL").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+
+
+
+                                         }
+
+                                         if (item.CategoryName == "Advisors Online Office") {
+                                             if (item.MenuName == "Prospect Management") {
+                                                 $("#Advisor_ProspectManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Client Management") {
+                                                 $("#Advisor_ClientManagementul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Order entry - Discretionary") {
+                                                 $("#Advisor_OrderentryDiscretionaryul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+                                             if (item.MenuName == "Order entry - Non discretionary") {
+                                                 if (item.FieldName .toLowerCase().indexOf("edost") >= 0) {
+                                                     $("#Advisor_OrderentryNondiscretionaryul").append("<li><a href='https://" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                                 else {
+                                                     $("#Advisor_OrderentryNondiscretionaryul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                                 }
+                                             }
+                                             if (item.MenuName == "Reports") {
+                                                 $("#Advisor_Reportsul").append("<li><a href='../" + item.FieldName + "'>" + item.Programe_Name + "</a></li>");
+                                             }
+
+
+                                         }
+
+
+
+
+                                     }
+                                    
+                                        
+                                        
+                                 });
+
+                                 
+
+                                 if ($("#Brokerageul li").length == 0) {
+
+                                     $("#BrokerageLink").hide();
+
+                                 }
+
+                                 if ($("#InvPlan_ClientReportUL li").length == 0) {
+
+                                     $("#InvPlan_ClientReport").hide();
+
+                                 }
+                                 if ($("#InvPlan_ClientReviewUL li").length == 0) {
+
+                                     $("#InvPlan_ClientReview").hide();
+
+                                 }
+                                 if ($("#InvPlan_ClientInputUL li").length == 0) {
+
+                                     $("#InvPlan_ClientInput").hide();
+
+                                 }
+
+
+                                 
+                                 if ($("#WealthAggr_AssetMastersUL li").length == 0) {
+
+                                     $("#WealthAggr_AssetMasters").hide();
+
+                                 }
+                                 if ($("#WealthInv_OrderentryDiscretionaryul li").length == 0) {
+
+                                     $("#WealthInv_OrderentryDiscretionary").hide();
+
+                                 }
+
+                                 if ($("#WealthAggr_GLSetupul li").length == 0) {
+
+                                     $("#WealthAggr_GLSetup").hide();
+
+                                 }
+                                 if ($("#WealthAggr_PMSMastersul li").length == 0) {
+
+                                     $("#WealthAggr_PMSMasters").hide();
+
+                                 }
+                                 if ($("#Advisor_ClientManagementul li").length == 0) {
+
+                                     $("#Advisor_ClientManagement").hide();
+
+                                 }
+                                 if ($("#WealthAggr_ProspectManagementul li").length == 0) {
+
+                                     $("#WealthAggr_ProspectManagement").hide();
+
+                                 }
+                                 if ($("#Advisor_OrderentryDiscretionaryul li").length == 0) {
+
+                                     $("#Advisor_OrderentryDiscretionary").hide();
+
+                                 }
+                                 if ($("#Advisor_OrderentryNondiscretionaryul li").length == 0) {
+
+                                     $("#Advisor_OrderentryNondiscretionary").hide();
+
+                                 }
+                                 if ($("#Advisor_Reportsul li").length == 0) {
+
+                                     $("#Advisor_Reports").hide();
+
+                                 }
+
+
+                                 if ($("#WealthAggr_GeneralMasterUL li").length == 0) {
+
+                                     $("#WealthAggr_GeneralMaster").hide();
+
+                                 }
+                                 if ($("#WealthAggr_GeographicalMastersul li").length == 0) {
+
+                                     $("#WealthAggr_GeographicalMasters").hide();
+                                 }
+                                 if ($("#WealthAggr_GenericAuthorizeul li").length == 0) {
+
+                                     $("#WealthAggr_GenericAuthorize").hide();
+
+                                 }
+                                 
+                                 if ($("#WealthAggr_ClientManagementul li").length == 0) {
+
+                                     $("#WealthAggr_ClientManagement").hide();
+
+                                 }
+                                 
+                                 if ($("#WealthAggr_Nondiscretionaryul li").length == 0) {
+
+                                     $("#WealthAggr_Nondiscretionary").hide();
+
+                                 }
+
+
+                                 if ($("#WealthAggr_MutualFundul li").length == 0) {
+
+                                     $("#WealthAggr_MutualFund").hide();
+                                 }
+
+
+                                 if ($("#WealthAggr_UserManagementul li").length == 0) {
+
+                                     $("#WealthAggr_UserManagement").hide();
+
+                                 }
+
+
+                                 if ($("#Advisor_CallManagementul li").length == 0) {
+
+                                     $("#Advisor_CallManagement").hide();
+
+                                 }
+                                 if ($("#Advisor_ProspectManagementul li").length == 0) {
+
+                                     $("#Advisor_ProspectManagement").hide();
+
+                                 }
+
+
+
+                                 if ($("#WealthInv_Planingul li").length == 0) {
+
+                                     $("#WealthInv_Planing").hide();
+
+                                 }
+
+
+                                 if ($("#WealthAggr_BOTransactionsul li").length == 0) {
+
+                                     $("#WealthAggr_BOTransactions").hide();
+
+                                 }
+                                 if ($("#WealthTrackAggr_IncmeExpul li").length == 0) {
+
+                                     $("#WealthTrackAggr_IncmeExp").hide();
+
+                                 }
+
+
+                                 if ($("#WealthAggr_MisReportsul li").length == 0) {
+
+                                     $("#WealthAggr_MisReports").hide();
+
+                                 }
+                                 if ($("#Brokerageul li").length == 0) {
+
+                                     $("#BrokerageLink").hide();
+
+                                 }
+                               
+
+
+                             }
+                         }, error: function (result) {
+
+                         }
+
+                                 });
+
+         });
+
+
+            var isClose = false;
+            
+        //this code will handle the F5 or Ctrl+F5 key
+        //need to handle more cases like ctrl+R whose codes are not listed here
+        document.onkeydown = checkKeycode
+            
+        function checkKeycode(e) {
+            var keycode;
+            if (window.event)
+                keycode = window.event.keyCode;
+            else if (e)
+                keycode = e.which;
+            if (keycode == 116) {
+                isClose = true;
+            }
+        }
+        function somefunction() {
+            isClose = true;
+        }
+        function doUnload() {
+            if (!isClose) {
+                if (clicked == false)//browser is closed  
+                {
+                    //location.href = '../SignOut.aspx';
+                    window.location.href = '../LogOut.aspx';
+                    alert('Your broswer is closing!!');
+                }
+            }
+        }
+
+
+        function GetPagelevelMenu(FieldName,menuID) {
+            try {
+                //var FieldName = document.location.href.split('/')[document.location.href.split('/').length - 2] + "/" + document.location.href.split('/')[document.location.href.split('/').length - 1];
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "../CommonWebServices/MasterBindings.aspx/GetPagelevelAccess",
+                    data: "{ FieldName: '" + FieldName + "'}",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        var tdata = jQuery.parseJSON(data.d);
+                       
+                        if (tdata.length > 0) {
+
+                            if (tdata[0].Authorization == false && tdata[0].Delete == false && tdata[0].Creation == false && tdata[0].Reversal == false) {
+
+                                $("#" + menuID).css('display', 'none')
+                            }
+                            else {
+                                $("#" + menuID).css('display', 'block');
+
+
+                            }
+                            
+                        }
+                    },
+                    error: function (result) {
+                        alert('Data not found.');
+                    }
+                });
+            } catch (e) {
+                ErrorLog(e);
+                alert(ErrorMsg());
+            }
+        }
+
+
+        function GetPagelevelAccess() {
+            try {
+              var FieldName = document.location.href.split('/')[document.location.href.split('/').length - 2] + "/" + document.location.href.split('/')[document.location.href.split('/').length - 1];
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "../CommonWebServices/MasterBindings.aspx/GetPagelevelAccess",
+                    data: "{ FieldName: '" + FieldName + "'}",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        var tdata = jQuery.parseJSON(data.d);
+                      
+                        if (tdata.length > 0) {
+                            tdata[0].Delete == false ? $('.EditClass').css('display', 'none') : $('.EditClass').css('display', 'block');
+                            tdata[0].Creation == false ? $('#a_New').css('display', 'none') : '';
+                            tdata[0].Creation == false ? $('.ButtonCls').css({ display: "none" }) : '';
+                            tdata[0].Creation == false ? $('.submit').css({ display: "none" }) : '';
+                            if (tdata[0].Creation == false) {
+                                $('#btnFPReview').css('display', 'none');
+                                $('#btnAdd').css('display', 'none');
+                            }
+
+                            tdata[0].Authorization == false ? $('.AuthorizationClass').css('display', 'none') : $('.AuthorizationClass').css('display', 'block');
+                            tdata[0].Delete == false ? $("img[id^='img_Edit_']").css('display', 'none') : $("img[id^='img_Edit_']").css('display', 'block');
+                            tdata[0].Reversal == false ? $("img[id^='img_Reverse_']").css('display', 'none') : $("img[id^='img_Reverse_']").css('display', 'block');
+                            tdata[0].Reversal == false ? $('.EditClass').css('display', 'none') : $('.EditClass').css('display', 'block');
+                            tdata[0].Delete == false ? $('.EditClass').css('display', 'none') : $('.EditClass').css('display', 'block');
+                            tdata[0].View == false ? $("img[id^='img_View_']").css('display', 'none') : $("img[id^='img_View_']").css('display', 'block');
+
+                        }
+                    },
+                    error: function (result) {
+                        alert('Data not found.');
+                    }
+                });
+            } catch (e) {
+                ErrorLog(e);
+                alert(ErrorMsg());
+            }
+        }
+
+            
+
+    </script>
+    <style type="text/css">
+        #ajaxBusy
+        {
+            display: none;
+            margin: 0px 0px 0px -50px; /* left margin is half width of the div, to centre it */
+            padding: 30px 10px 10px 10px;
+            position: absolute;
+            left: 10%;
+            top: 30%;
+            z-index: 9999;
+            width: 90%;
+            height: 100px;
+            text-align: center;
+            background: url(../images/ajax_loader_blue_48.gif) no-repeat center center;
+            border: none;
+        }
+
+        .MenuHeader
+        {
+            text-decoration: none;
+            white-space: nowrap;
+            color: #ffffff;
+            float: left;
+            padding: 2px 6px 6px 6px;
+            text-align: center;
+            background-color: #017DC5; /* border-top: solid 1px #003e80;*/
+            border-left: 1px double #003562;
+            height: 20px;
+        }
+
+        /*.Header
+        {
+            text-decoration: none;
+            white-space: nowrap;
+            color: #ffffff;
+            float: left;
+            padding-top: 5px;
+            padding-bottom: 0px;
+            text-align: center;
+            height: auto;
+            background-position: center 35px;
+            background-image: url("../Images/home12.png");
+            background-repeat: no-repeat;
+            width: 100%;
+            margin-top: -35px;
+        }*/
+
+        .MenuHeader_Rev
+        {
+            background-color: White;
+            text-decoration: none;
+            color: #003563;
+            border-top: solid 1px #144982;
+        }
+
+        .MenuPop
+        {
+            position: absolute;
+            display: none;
+            left: 0;
+            top: 0;
+            background: #ffffff;
+            border: 1px solid #003e80;
+            margin-right: 20px;
+            border-width: 0px 1px 1px 1px;
+            padding: 10px;
+            z-index: 100;
+        }
+
+            .MenuPop .MenuDiv
+            {
+                float: left;
+                min-width: 180px;
+                max-width: 300px;
+                margin-right: 5px;
+            }
+
+                .MenuPop .MenuDiv ul
+                {
+                    margin: 0;
+                    padding: 0;
+                    list-style-type: none;
+                }
+
+                    .MenuPop .MenuDiv ul li
+                    {
+                        padding-bottom: 3px;
+                        background-image: url("../Images/menu_icon.gif");
+                        background-repeat: no-repeat;
+                        background-position: left;
+                    }
+
+                .MenuPop .MenuDiv h4
+                {
+                    background: #cedae8;
+                    min-width: 180px;
+                    max-width: 100%;
+                    color: #003562;
+                    font-weight: bold;
+                    margin: 0 0 10px 0;
+                    white-space: nowrap;
+                }
+
+                .MenuPop .MenuDiv ul li a
+                {
+                    padding-left: 20px;
+                    text-decoration: none;
+                    color: #144982;
+                    white-space: nowrap;
+                }
+
+                    .MenuPop .MenuDiv ul li a:hover
+                    {
+                        text-decoration: underline;
+                    }
+
+        .footer_leftmenu
+        {
+            /*
+            font-size: 13px;
+            font-family: "Helvetica Neue" , "Lucida Grande" , "Segoe UI" , Arial, Helvetica, Verdana, sans-serif;
+            color: #fff;
+            background-color: #017DC5;
+            width: 1009;
+            float: right;
+            margin-right: 11px;
+            padding-left: 35px;
+            text-align: center;*/
+            background-color: #CEDAE8;
+            color: #002D66;
+            float: left;
+            font-size: 10px;
+            margin-left: 7px;
+            margin-right: 0;
+            text-align: center;
+            width: 1009px;
+        }
+
+
+        /* .MenuContainerBG
+        {
+            width: 97%;
+            float: right;
+        } */
+        .HeaderDIV
+        {
+            margin: 0px 0px 0px 0px;
+        }
+
+        .MenuContainer
+        {
+            background-color: #017DC5;
+            float: left;
+            margin-left: 10px;
+            width: 1003px;
+            border-top: 1px solid #003E80;
+            height: 28px;
+        }
+
+        .lnkbutton
+        {
+            color: #003E79;
+        }
+
+        .Headermenu
+        {
+            background-color: #FFFFFF;
+            color: #003E79;
+            float: left;
+            font-size: 11px;
+            font-weight: bold;
+            height: 27px;
+            margin-left: 7px;
+            margin-top: 99px;
+            width: 1009px;
+        }
+
+
+        .error
+        {
+            border: 1px solid #b94a48!important;
+            background-color: #fee!important;
+        }
+
+        .tooltip
+        {
+            position: absolute;
+            z-index: 1030;
+            display: block;
+            visibility: visible;
+            font-size: 11px;
+            line-height: 1.4;
+            opacity: 0;
+            filter: alpha(opacity=0);
+        }
+
+            .tooltip.in
+            {
+                opacity: 1;
+                filter: alpha(opacity=80);
+            }
+
+            .tooltip.top
+            {
+                margin-top: -3px;
+                padding: 5px 0;
+            }
+
+            .tooltip.right
+            {
+                margin-left: 3px;
+                padding: 0 5px;
+            }
+
+            .tooltip.bottom
+            {
+                margin-top: 3px;
+                padding: 5px 0;
+            }
+
+            .tooltip.left
+            {
+                margin-left: -3px;
+                padding: 0 5px;
+            }
+
+        .tooltip-inner
+        {
+            max-width: auto;
+            padding: 8px;
+            color: #ffffff;
+            text-align: center;
+            text-decoration: none;
+            background-color: #b94a48; /*#144982;*/ /*#000000;*/
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+        }
+
+        .tooltip-arrow
+        {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-color: transparent;
+            border-style: solid;
+        }
+
+        .tooltip.top .tooltip-arrow
+        {
+            bottom: 0;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px 5px 0;
+            border-top-color: #000000;
+        }
+
+        .tooltip.right .tooltip-arrow
+        {
+            top: 50%;
+            left: 0;
+            margin-top: -5px;
+            border-width: 5px 5px 5px 0;
+            border-right-color: #000000;
+        }
+
+        .tooltip.left .tooltip-arrow
+        {
+            top: 50%;
+            right: 0;
+            margin-top: -5px;
+            border-width: 5px 0 5px 5px;
+            border-left-color: #000000;
+        }
+
+        .tooltip.bottom .tooltip-arrow
+        {
+            top: 0;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 0 5px 5px;
+            border-bottom-color: #000000;
+        }
+    </style>
+
+
+    <!-- STYLESHEET -->
+    <link href="../stylesheet/style.css" type="text/css" rel="stylesheet" />
+    <%--<link href="../stylesheet/mainmenu.css" type="text/css" rel="stylesheet" />--%>
+  <%--  <link href="../stylesheet/meanmenu.css" rel="stylesheet" media="all" />--%>
+    <!-- <link href="stylesheet/font-awesome.css" rel="stylesheet" type="text/css"> -->
+
+    <!-- SCROLL BAR -->
+
+
+    <%--<link href="../stylesheet/slider/sliderbar.css" rel="stylesheet" />--%>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $("[data-toggle]").click(function () {
+                var toggle_el = $(this).data("toggle");
+                $(toggle_el).toggleClass("open-sidebar");
+            });
+            $(".swipe-area").swipe({
+                swipeStatus: function (event, phase, direction, distance, duration, fingers) {
+                    if (phase == "move" && direction == "right") {
+                        $(".container").addClass("open-sidebar");
+                        return false;
+                    }
+                    if (phase == "move" && direction == "left") {
+                        $(".container").removeClass("open-sidebar");
+                        return false;
+                    }
+                }
+            });
+        });
+
+    </script>
+    
+
+   
+    <%--<link href="../stylesheet/dropdown/dropdown.css" rel="stylesheet" media="screen" type="text/css" />--%>
+    <!--<script type="text/javascript" src="../stylesheet/dropdown/ddaccordion.js"></script>-->
+
+    <script type="text/javascript">
+
+        ddaccordion.init({
+            headerclass: "submenuheader", //Shared CSS class name of headers group
+            contentclass: "submenu", //Shared CSS class name of contents group
+            revealtype: "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+            mouseoverdelay: 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+            collapseprev: true, //Collapse previous content (so only one open at any time)? true/false 
+            defaultexpanded: [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+            onemustopen: false, //Specify whether at least one header should be open always (so never all headers closed)
+            animatedefault: false, //Should contents open by default be animated into view?
+            persiststate: true, //persist state of opened contents within browser session?
+            toggleclass: ["", ""], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+            togglehtml: ["suffix", "<img src='../images/plus.gif' class='statusicon' />", "<img src='../images/minus.gif' class='statusicon' />"], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+            animatespeed: "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+            oninit: function (headers, expandedindices) { //custom code to run when headers have initalized
+                //do nothing
+            },
+            onopenclose: function (header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+                //do nothing
+            }
+        })
+
+
+    </script>
+
+
+    <!-- USER ADMIN -->
+    <%--<link href="../stylesheet/useradmin.css" type="text/css" rel="stylesheet" />--%>
+    <link href="../stylesheet/font-awesome.css" rel="stylesheet" />
+    <!--<link rel='stylesheet prefetch' href='http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css'> -->
+    <script src="../Scripts/autoNumeric.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+     //       $('.currency').each(function () {
+     //           var element = this
+     //           if (element.value != "") {
+     //               $('#' + element.id).val($.fn.autoNumeric.Format(element.id, element.value));
+     //           }
+
+     //       }
+
+     //);
+
+
+
+            $('form').submit(function () {
+                var form = $(this);
+                //$('input[type="text"]').each(function (i) {
+                $('.currency').each(function (i) {
+                    var self = $(this);
+                    try {
+                        var v = self.autoNumeric('get');
+                        self.autoNumeric('destroy');
+                        self.val(v);
+                    } catch (err) {
+                        // console.log("Not an autonumeric field: " + self.attr("name"));
+                    }
+                });
+                return true;
+            });
+            //$('.currency').autoNumeric('init').trigger('focusout');
+            $('.currency').autoNumeric('init', { dGroup: 2, mDec: 2 }).trigger('focusout');
+              
+
+            $(".account").click(function () {
+                var X = $(this).attr('id');
+
+                if (X == 1) {
+                    $(".submenudrop").hide();
+                    $(this).attr('id', '0');
+                }
+                else {
+
+                    $(".submenudrop").show();
+                    $(this).attr('id', '1');
+                }
+
+            });
+
+            //Mouseup textarea false
+            $(".submenudrop").mouseup(function () {
+                return false
+            });
+            $(".account").mouseup(function () {
+                return false
+            });
+
+
+            //Textarea without editing.
+            $(document).mouseup(function () {
+                $(".submenudrop").hide();
+                $(".account").attr('id', '');
+            });
+
+        });
+        function getautoNumeric(value) {
+            $('#txtauto').val('');
+            if (value != '') {
+                $('#txtauto').autoNumeric("set", value)
+                var autone = $('#txtauto').val();
+            }
+            else {
+                return value;
+            }
+            return autone;
+        }
+
+        function getNumeric(value) {
+            $('#txtauto').val('');
+            if (value != '') {
+                $('#txtauto').val(value);                
+                var autone = $('#txtauto').autoNumeric("get")
+            }
+            else {
+                return value;
+            }
+            return autone;
+        }
+    </script>
+
+    <script type="text/javascript" src="../WebPageJScripts/Admin/LandingPage.js"></script>
+     <script src="../WebPageJScripts/AuthView.js" type="text/javascript" defer="defer"></script>
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+        <%--  <%: Scripts.Render("~/Content", "~/bundles/CommandJS")%>
+        <%: Styles.Render("~/bundles/CommanCSS")%>--%>
+        
+    </asp:ContentPlaceHolder>
+</head>
+<body style="background-image: url('../Images/Back2.gif'); padding-left: 1px;min-width:930px" id="PageBody">
+    <form id="form1" name="form1" runat="server" clientidmode="Static">
+        <div style="min-width:930px">
+        <div id="ajaxBusy"></div>
+        <div id="wapper-internal" style="white-space:nowrap">
+            <div class="header" >
+                <div class="logo-left">
+                    <img src="../images/karvy-logo.jpg">
+                </div>
+                <div class="logo-right">
+                    
+                    <div class="alertsnotes-admin">
+                        <div class="dropdownmenu">
+                            <a class="account">
+                                <div class="circle" style="background-image: url(../images/admin-photo.jpg);"></div>
+                                <span style="margin-top: 15px">My Account</span>
+                            </a>
+                            <div class="submenudrop" style="display: none;">
+                                <ul class="root">
+                                    <%--<li>
+                                        <a href="../DashBoardWelcomePage.aspx"><i class="fa fa-bar-chart-o" style="margin-right: 5px"></i>Dashboard</a>
+                                    </li>
+                                    <li>
+                                        <a href="#Profile"><i class="fa fa-pencil-square-o" style="margin-right: 5px"></i>Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="#settings"><i class="fa fa-cogs" style="margin-right: 5px"></i>Settings</a>
+                                    </li>--%>
+                                   <%-- <li>
+                                        <a href="../Admin/ChangePassword.aspx"><i class="fa fa-comment-o" style="margin-right: 5px"></i>Change Password</a>
+                                    </li>--%>
+                                    <li>
+                                        <a href="../Logout.aspx"><i class="fa fa-unlock-alt" style="margin-right: 5px"></i>Sign Out</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <!-- MENU SECTION -->
+                <div class="menu-nav">
+                    <nav>
+                        <ul>
+                           
+                            <li><a id="a_Advisor">Advisors Online Office</a>
+                               
+                            </li>
+                            <li><a id="a_Wealth">Wealth Investment Planning</a>
+                               
+                            </li>
+                            <li><a id="a_Income">Income and Expense Management</a>
+                               
+                            </li>
+                            <li><a id="a_Customer" href="../CRM/ClientSearch.aspx">Customer Online Portal</a>
+                              
+                            </li>
+                             <li><a id="a_WealthAggr">Wealth Tracking Aggregator</a>
+                                
+                            </li>
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <!-- SLIDER BAR LEFT -->
+        <div class="container">
+            <div id="sidebar">
+                <div>
+                    <input name="" type="text" class="search" placeholder="Search here" />
+                </div>
+                <div id="div_Advisor" class="glossymenu">
+                  
+                    <a class="menuitem submenuheader" id="Advisor_ProspectManagement">
+                        <img src="../Images/management-icon.png" />
+                        Prospect Management</a>
+                    <div class="submenu">
+                        <ul id="Advisor_ProspectManagementul">
+                           
+                        </ul>
+                    </div>
+                       
+                    
+                    <a class="menuitem submenuheader" id="Advisor_CallManagement">
+                        <img src="../Images/call-icon.png" />
+                        Call Management</a>
+                    <div class="submenu">
+                        <ul id ="Advisor_CallManagementul">
+                            <%--<li><a href="../Masters/ContactBookandScheduleCall.aspx">Call Scheduler</a></li>--%>
+                          <%--  <li><a>Contact book + Schedule call - Family</a></li>--%>
+                           <%-- <li><a href="../Masters/Callupdate.aspx">Call Scheduler</a></li>--%>
+                            <%--<li><a>Calendar</a></li>--%>
+                        </ul>
+                    </div>
+                    
+                    <a class="menuitem submenuheader" id="Advisor_ClientManagement">
+                        <img src="../Images/client.png" />
+                        Client Management</a>
+                    <div class="submenu">
+                        <ul id="Advisor_ClientManagementul">
+                            
+                           
+                        </ul>
+                    </div>
+                    
+                    <a class="menuitem submenuheader" id="Advisor_OrderentryDiscretionary">
+                        <img src="../Images/order.png" />
+                        Order entry - Discretionary</a>
+                    <div class="submenu">
+                        <ul id="Advisor_OrderentryDiscretionaryul">
+                          
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="Advisor_OrderentryNondiscretionary">
+                        <img src="../Images/order.png" />
+                        Order entry - Non discretionary</a>
+                    <div class="submenu">
+                        <ul id="Advisor_OrderentryNondiscretionaryul">
+                        
+                           
+                        </ul>
+                    </div>
+                    <%--<a class="menuitem submenuheader">
+                        <img src="../Images/order-approval.png" />
+                        Order Approval</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a>Discretionary PMS order</a></li>
+                            <li><a>Non discretionary - Mutual fund order</a></li>
+                            <li><a>Non discretionary - Debt order</a></li>
+                            <li><a>Non discretionary - Derivatives order</a></li>
+                            <li><a>Non discretionary - Insurance order</a></li>
+                            <li><a>Non discretionary - Managed Accounts order</a></li>
+                        </ul>
+                    </div>--%>
+                   
+                    <a class="menuitem submenuheader" id="Advisor_Reports">
+                        <img src="../Images/report.png" />
+                        Reports</a>
+                    <div class="submenu">
+                        <ul id="Advisor_Reportsul">
+                             
+                        </ul>
+                    </div>
+                </div>
+             
+                <div id="div_Wealth" class="glossymenu">
+                    <a class="menuitem submenuheader" id="InvPlan_ClientInput">
+                        <img src="../Images/management-icon.png" />
+                        Client Input</a>
+                    <div class="submenu">
+                        <ul id="InvPlan_ClientInputUL">
+                            
+                        </ul>
+                    </div>
+
+
+                    <a class="menuitem submenuheader" id="InvPlan_ClientReview">
+                        <img src="../Images/call-icon.png" />
+                        Client Review</a>
+                    <div class="submenu">
+                        <ul id="InvPlan_ClientReviewUL">
+                            
+                        </ul>
+
+                    </div>
+<a class="menuitem submenuheader" id="InvPlan_ClientReport">
+                        <img src="../Images/call-icon.png" />
+                        Client Report</a>
+                    <div class="submenu">
+                        <ul id="InvPlan_ClientReportUL">
+
+
+                            </ul></div>
+
+                </div>
+
+                <div id="div_Income" class="glossymenu">
+                     <a class="menuitem submenuheader" id="WealthTrackAggr_IncmeExp">
+                        <img src="../Images/report.png" />
+                        Masters</a>
+                    <div class="submenu">
+                        <ul id="WealthTrackAggr_IncmeExpul">
+                             <%--  <li><a href="../RIMS/RIMS_Com_Exp.aspx">Commission exception master</a></li>
+                            <li><a href="../RIMS/ManagementFeemaster.aspx">Management Fees Definition</a></li>
+                            <li><a href="../RIMS/RIMS_ManagementFeeMapping.aspx">Management Fee Mapping to clients</a></li>
+                            <li><a href="../RIMS/RIMS_Other_Setup.aspx">RIMS Other Asset Setup</a></li>
+                             <li><a href="../RIMS/RIMS_ProjectFees.aspx">Project Fees master</a></li>
+                            <li><a href="../RIMS/RIMS_RateCard_Setup.aspx">RIMS Rate Card Setup</a></li>
+                            <li><a href="../RIMS/RIMS_ProjectFee_TranscMaster.aspx">Project Fees TransMaster</a></li>
+                             <li><a href="../RIMS/RIMS_BusinessUnitMaster.aspx">RIMS-Business unit masters</a></li>
+                             <li><a href="../RIMS/RIMS_BranchGradingMaster.aspx">RIMS-Branch Grading master</a></li>
+                             <li><a href="../RIMS/RIMS_BranchCategoryMaster.aspx">RIMS-Branch Category master</a></li>
+                             <li><a href="../RIMS/RIMS_BranchMappingMaster.aspx">RIMS-Branch mapping masters</a></li>
+                            <li><a href="../Masters/BrokerFeeUpload.aspx">Broker Fee Master</a></li>
+                         
+                        </ul>--%>
+                    </div>
+                        
+                  <%--  <a class="menuitem submenuheader">
+                        <img src="../Images/management-icon.png" />
+                        Income Rate Cards</a>
+                    <div class="submenu">--%>
+                       <%-- <ul>
+                            <li><a>Mutual Fund - Normal rate card</a></li>
+                            <li><a>Mutual Fund - Adhoc rate card</a></li>
+                            <li><a>Debt rate card</a></li>
+                            <li><a>Insurance rate card</a></li>
+                            <li><a>Managed Accounts rate card</a></li>
+                            <li><a>Project fee transactions entry</a></li>
+                        </ul>--%>
+                   <%-- </div>
+                    <a class="menuitem submenuheader">
+                        <img src="../Images/call-icon.png" />
+                        Expense Rate Cards</a>
+                    <div class="submenu">--%>
+                       <%-- <ul>
+                            <li><a>Mutual Fund - Normal rate card</a></li>
+                            <li><a>Mutual Fund - Adhoc rate card</a></li>
+                            <li><a>Debt rate card</a></li>
+                            <li><a>Insurance rate card</a></li>
+                            <li><a>Managed Accounts rate card</a></li>
+                        </ul>--%>
+                   <%-- </div>
+                    <a class="menuitem submenuheader">
+                        <img src="../Images/call-icon.png" />
+                        Reports</a>
+                    <div class="submenu">--%>
+                       <%-- <ul>
+                            <li><a>RIMS - Incentive calculation</a></li>
+                        </ul>
+                    </div>--%>
+                </div>
+                <%--
+                <div id="div_Customer" class="glossymenu">
+                     
+                     <a class="menuitem submenuheader">
+                        <img src="../Images/management-icon.png" />
+                        Customer Online Portal</a>
+                    <div class="submenu">
+                       
+                      <ul>
+                            <li><a>Portfolio vs. Corpus Movement Report</a></li>
+                            <li><a>Corpus Movement Report</a></li>
+                            <li><a>Current Portfolio vs Recommended View</a></li>
+                            <li><a>Portfolio Performance Report</a></li>
+                            <li><a>Portfolio Holding Report</a></li>
+                            <li><a>Capital Gains Statement</a></li>
+                            <li><a>Transaction History</a></li>
+                            <li><a>Current Portfolio view</a></li>
+                            <li><a>Recommended Portfolio View</a></li>
+                            <li><a>Corporate Action Report</a></li>
+                            <li><a>Expense Statement</a></li>
+                            <li><a>Income statement</a></li>
+                            <li><a>Family Summary Report</a></li>
+                            <li><a>Client - Portfolio Attributes</a></li>
+                            <li><a>Asset allocation movement</a></li>
+                            <li><a>Key Portfolio Actions</a></li>
+                            <li><a>Mutual Fund - Order Entry</a></li>
+                            <li><a>Heatmap</a></li>
+                            <li><a>News and ticker feeds</a></li>
+                            <li><a>BSE Chart</a></li>
+                            <li><a>BSE Ticker</a></li>
+                            <li><a>NSE Chart</a></li>
+                            <li><a>NSE Ticker</a></li>
+                            <li><a>Bank Position Report</a></li>
+                            <li><a>Message desk from Research and Service RM</a></li>
+                            <li><a>Recommended Porducts</a></li>
+                            <li><a>Client Feedback</a></li>
+                        </ul>
+                    </div>
+
+                </div>--%>
+                <div id="div_WealthAggr" class="glossymenu">
+                    <%--<a class="menuitem submenuheader">
+                        <img src="../Images/report.png" />
+                        Order Approval</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a>Discretionary PMS order</a></li>
+                            <li><a>Non discretionary - Mutual fund order</a></li>
+                            <li><a>Non discretionary - Equity order</a></li>
+                            <li><a>Non discretionary - Debt order</a></li>
+                            <li><a>Non discretionary - Derivatives order</a></li>
+                            <li><a>Non discretionary - Insurance order</a></li>
+                            <li><a>Non discretionary - Managed Accounts order</a></li>
+                        </ul>
+                    </div>--%>
+                    <%--<a class="menuitem submenuheader">
+                        <img src="../Images/report.png" />
+                        Equity Masters</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="../Masters/EquitySector.aspx">Equity sector master</a></li>
+                            <li><a href="../Masters/SectorCategoryMaster.aspx">Sector category</a></li>
+                            <li><a href="../Masters/EquitySegment.aspx">Equity segment master</a></li>
+                            <li><a href="../Masters/EquitySettlement.aspx">Settlement calendar</a></li>
+                            <li><a href="../Masters/MFSettlementMaster.aspx">Settlement master</a></li>
+                            <li><a href="../Masters/WatchlistAndTriggers.aspx">Watchlist and Trigger setup</a></li>
+                            <li><a href="../Masters/EquitySendToBO.aspx">Equity Send to BO</a></li>
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader">
+                        <img src="../Images/report.png" />
+                        Debt Masters</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="../Masters/BenchmarkSetup.aspx">Benchmark setup</a></li>
+                            <li><a href="../Masters/AgencySetup.aspx">Agency setup</a></li>
+                            <li><a href="../Masters/CounterParty.aspx">Counter Party setup</a></li>
+                            <li><a href="../Masters/Issuer.aspx">Issuer master</a></li>
+                            <li><a href="../Masters/ConstraintMaster.aspx">Constraint master</a></li>
+                        </ul>
+                    </div>--%>
+                    <a class="menuitem submenuheader" id="WealthAggr_GeneralMaster">
+                        <img src="../Images/report.png" />
+                        General Masters</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_GeneralMasterUL">
+                          
+                  
+                        </ul>
+                    </div>
+                  <a class="menuitem submenuheader" id="WealthAggr_AssetMasters">
+                        <img src="../Images/report.png" />
+                        Asset Masters</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_AssetMastersUL">
+                           <%-- <li><a href="../Masters/EquitySector.aspx">Sector Master</a></li>
+                            <li><a href="../Masters/SectorCategoryMaster.aspx">Sector Category</a></li>
+                            <li><a href="../Masters/EquitySegment.aspx">Segment Master</a></li>
+                            <li><a href="../Masters/EquitySettlement.aspx">Settlement Calendar</a></li>
+                            <li><a href="../Masters/EquityManualCorporateAction.aspx">Manual Corporate Action</a></li>
+                            <li><a href="../Masters/MFSettlementMaster.aspx">Settlement Master</a></li>
+                            <li><a href="../Masters/WatchlistAndTriggers.aspx">Watchlist & Trigger Setup</a></li>
+                            <li><a href="../Masters/BenchmarkSetup.aspx">Benchmark setup</a></li>
+                            <li><a href="../Masters/Issuer.aspx">Issuer master</a></li>
+                            <li><a href="../Masters/ConstraintMaster.aspx">Constraint master</a></li>
+                            <li><a href="../Masters/DebtMarketValue.aspx">Market value</a></li>
+                            <li><a href="../Masters/ScripType.aspx">Scrip Type</a></li>
+                          
+                            <li><a href="https://edost.karvymfs/KarvyboiWAAP/masters/SecurityInformation.aspx">Security Information</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/masters/PartRedemption.aspx">Part Redemption</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/masters/Feedefinition.aspx">Fee Definition</a></li>
+                            <li><a href="../Masters/SecuritiesUniverseMaster.aspx">Securities Universe master</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/masters/FutureoptionParams.aspx">Future Option Params</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/masters/Corporateactionsdefinition.aspx">Corporate Actions Definition</a></li>
+                             <li><a href="../Masters/Insurance_PolicyNatureMaster.aspx">Insurance - Policy nature masters</a></li>
+                             <li><a href="../Masters/Insurance_PolicyTypeMaster.aspx">Insurance - Policy type masters</a></li>
+                             <li><a href="../Masters/Insurance_PolicyMaster.aspx">Insurance - Policy master</a></li>
+                              <li><a href="../FinancialPlanning/AssetGrowthMaster.aspx">Asset Growth master</a></li>
+                             <li><a href="../FinancialPlanning/SecurityRestrictionMaster.aspx">Security restriction master</a></li>
+                              <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/masters/ExchangeRate.aspx">Exchange rate</a></li>--%>
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthAggr_GeographicalMasters">
+                        <img src="../Images/report.png" />
+                        Geographical Masters</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_GeographicalMastersul">
+                       
+                        </ul>
+                    </div>
+                       <a class="menuitem submenuheader" id="WealthAggr_PMSMasters">
+                        <img src="../Images/report.png" />
+                        PMS Masters</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_PMSMastersul">
+                          
+
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthAggr_GenericAuthorize">
+                        <img src="../Images/report.png" />
+                        Generic Authorize & Upload</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_GenericAuthorizeul">
+                            <%--<li><a href="../Admin/Authorize.aspx" id="Authorize">Authorize</a></li>--%>
+                           <%-- <li><a href="../GenericUploads/GenericUploads.aspx">Generic Uploads</a></li>  
+			    <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Processing/EODTasks.aspx">End of Day Process</a></li>     
+			    <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Processing/ProjectionNav.aspx">ProjectionNav</a></li>    
+			    <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Masters/CodeMapping.aspx">Code Mapping</a></li>   --%>                         
+                        </ul>
+                    </div>
+                    <<a class="menuitem submenuheader" id="WealthAggr_GLSetup">
+                        <img src="../Images/report.png" />
+                        GL Setup</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_GLSetupul">
+                           
+                        </ul>
+                    </div>
+                    <%--<a class="menuitem submenuheader">
+                        <img src="../Images/report.png" />
+                        Call Management</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="../Masters/Callupdate.aspx">Call Scheduler</a></li>                   
+                         
+                        </ul>
+                    </div>--%>
+                 <a class="menuitem submenuheader" id="WealthAggr_ProspectManagement">
+                        <img src="../Images/report.png" />
+                        Prospect Management</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_ProspectManagementul">
+                          
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthAggr_ClientManagement">
+                        <img src="../Images/report.png" />
+                        Client Management</a>
+                    <div  class="submenu">
+                        <ul id ="WealthAggr_ClientManagementul">
+                          <%--  <li><a href="../Masters/ClientGroup_Master.aspx" id="ClientGroup_Master" >Client Group</a></li>
+                            <li><a href="../Masters/Family_Master.aspx" id="Family_Master">Family</a></li>
+                          
+                            <li><a href="../Masters/ClientReg.aspx" id="ClientReg">Client Account creation</a></li>
+                            <li><a href="../CRM/ProspectAssingnReassingn.aspx" id="ProspectAssingnReassingn">Client Assign-Reassign</a></li>
+                            <li><a href="../Masters/ClientDocumentUpload.aspx" id="ClientDocumentUpload">Documents received from clients</a></li>
+                            <li><a href="../Masters/DocVerification.aspx" id="DocVerification">Client Documents Verification</a></li>
+                            <li><a href="../Masters/ChecklistofDocuments.aspx" id="ChecklistofDocuments">Checklist of Client Documents</a></li>
+                             <li><a href="../Masters/AccountActiveandDeactive.aspx" id="AccountActiveandDeactive">Account Activation/Deactivation</a></li>--%>
+                            
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthInv_Planing">
+                        <img src="../Images/report.png" />
+                        Wealth Investment Planning</a>
+                    <div class="submenu">
+                        <ul id="WealthInv_Planingul">
+                           
+
+                           
+                        </ul>
+                    </div>
+                   
+                   <a class="menuitem submenuheader" id="WealthInv_OrderentryDiscretionary">
+                        <img src="../Images/report.png" />
+                        Order entry - Discretionary</a>
+                    <div class="submenu">
+                        <ul id="WealthInv_OrderentryDiscretionaryul">
+                           
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthAggr_Nondiscretionary">
+                        <img src="../Images/report.png" />
+                        Order entry - Non discretionary</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_Nondiscretionaryul">
+                            <%--<li><a href ="../MFTransactions/MFTransaction_Entry.aspx" id="MFTransaction_Entry">Mutual fund order</a></li>
+                            <li><a href="../Masters/EquityRequisition.aspx">Equity Requisition</a></li>
+                            <li><a href="../Masters/EquityPlacement.aspx">Equity Placement & Confirmation</a></li>
+                            <li><a href="../Masters/EquitySendToBO.aspx">Send to BO</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/SMTran.aspx">Secondary Market Deal</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/DerivativeTransaction.aspx">Derivatives Transaction</a></li>
+                            <li><a href="../Masters/InsuranceOrder.aspx">Insurance Transaction</a></li>
+                            <li><a href="../Masters/ManageAcc.aspx">Managed Accounts Transaction</a></li>
+			    <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/PMTran.aspx">Primary Market Application</a></li>
+			    <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/PMAllotment.aspx">Primary Market Allotment</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/InvestmentAdjustments.aspx">Positions Adjustment</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/reporevrepoplacement.aspx">Repo Placement</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/reporevrepowithdrawal.aspx">Repo Withdrawal</a></li>--%>
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthAggr_MutualFund">
+                        <img src="../Images/report.png" />
+                        Mutual Fund</a>
+                    <div class="submenu">
+                        <ul id="WealthAggr_MutualFundul">
+                            <%--<li><a href="../Masters/AssetClassMaster.aspx" id="AssetClassMaster">Asset master</a></li>
+                            <li><a href="../Masters/SubAssetClassMaster.aspx" id="SubAssetClassMaster">Sub-Asset master</a></li>
+                            <li><a href="../Masters/SectorAndBenchmarkMaster.aspx" id="SectorAndBenchmarkMaster">Sector and Benchmark master</a></li>
+                            <li><a href="../Masters/MFRegistrar.aspx" id="MFRegistrar">Registrar master</a></li>
+                            <li><a href="../Masters/AMCparameters.aspx" id="AMCparameters">AMC master</a></li>
+                            <li><a href="../Masters/SchemeMasters.aspx" id="SchemeMasters">Scheme master</a></li>
+                            <li><a href="../Masters/SystematicMasters.aspx" id="SystematicMasters">Systematic master</a></li>
+                            <li><a href="../Masters/MFLoadMaster.aspx">Load master</a></li>
+                            <li><a href="../Masters/MF_NavUpdate.aspx" id="MF_NavUpdate">NAV update</a></li>
+                            <li><a href="../Masters/MFBalancedSchemeAllocation.aspx">Balanced scheme allocation</a></li>
+                            <li><a href="../Masters/MF_CashEquivalentMaster.aspx">Cash Equivalent master</a></li>
+                            <li><a href="../Masters/CityMapping.aspx" id="CityMapping">City mapping</a></li>
+                            <li><a href="../Masters/OccupationCodeMaster.aspx" id="OccupationCodeMaster">Occupation code Master</a></li>
+ <li><a href ="../MFTransactions/MF_GCGFeedGenandConfirm.aspx" id="MF_GCGFeedGenandConfirm">GCG Fedd Generation and Confirmation</a></li>
+                            <li><a href ="../MFTransactions/DiscontinueSyst.aspx" id="DiscontinueSyst">Discontinue System</a></li>
+                            <li><a href="../MFTransactions/RTATransactionFeedGeneration.aspx" id="RTATransactionFeedGeneration">Generate RTA Transaction Feed</a></li>
+                            <li><a href="../MFTransactions/MFOrderFlagAndLimitMaster.aspx" id="MFOrderFlagAndLimitMaster">Order Flag and Limit Master</a></li>
+ <li><a href="../DataPorting/MFTransactionMapping.aspx" id="MFTransactionMapping">RTA data porting – Reverse Confirmation Feed</a></li>
+                            <li><a href="../DataPorting/Porting.aspx" id="Porting">RTA data porting – Reverse Confirmation Feed</a></li>
+                           <%-- <li><a href="../Masters/AmcMergeMaster.aspx">AMC Merge Master</a></li>
+                            <li><a href="../Masters/MF_Investmentuniverse.aspx">MF Investment Universe</a></li>                            
+                            <li><a href="../Masters/OccupationCodeMaster.aspx">OccupationCode Master</a></li>
+                            <li><a href="../MFTransactions/AUMReconcilation.aspx" id="AUMReconcilation">AUM Reconcilation</a></li>
+                            <li><a href="../MFTransactions/FolioReconcilation.aspx" id="FolioReconcilation">Folio Reconcilation</a></li>
+                            <li><a href="../MFTransactions/MFOrderFlagAndLimitMaster.aspx">MFOrderFlag & LimitMaster</a></li>
+                            <li><a href="../MFTransactions/RTATransactionFeedGeneration.aspx">RTATransaction FeedGeneration</a></li>
+                            <li><a href="../MFTransactions/Transactionreconcilation.aspx" id="Transactionreconcilation">Transaction Reconcilation</a></li>
+                            <li><a href="../MFTransactions/DeleteTransactions.aspx" id="DeleteTransactions">Delete Transactions</a></li>
+                              <li><a href="../MFTransactions/TransactionConsole.aspx" id="A1">Order Approval</a></li>
+                             <li><a href="../Masters/MF_Investor_TypeMapping.aspx" id="MF_Investor_TypeMapping">MF-Investor type mapping</a></li>
+                            <li><a href="../Masters/MF_StateMapping.aspx" id="MF_StateMapping">MF-State mapping</a></li>
+                            <li><a href="../Masters/SchemeMasterUpload.aspx" id="SchemeMasterUpload">Scheme Master upload</a></li>
+                            <li><a href="../Masters/SchemeReport.aspx" id="SchemeReport">Scheme Master Reporting</a></li>
+                            <li><a href="../MFtransactions/MFReports.aspx" id="MFReportsRTA">RTA Integration-Generate Registration files</a></li>
+                            <li><a href="../MFtransactions/MFReports.aspx" id="MFReportsFTF">Funding-Franklin Templeton funding </a></li>
+                           <li><a href="../MFtransactions/MFReports.aspx" id="MFReportsFKF">Funding-Karvy funding</a></li>
+                           <li><a href="../MFtransactions/MFReports.aspx" id="MFReportsFCTSR">Funding-CAMS-Transaction summary report</a></li>
+                           <%--<li><a href="../MFtransactions/MFReports.aspx">Folio feeds not received</a></li>
+                        <li><a href="../MFTransactions/MFReports.aspx" id="MFReports">MF Reports</a></li>
+                             <li><a href="../Masters/ClientUpload.aspx" id="ClientUpload">Client Upload</a></li>--%>
+                        </ul>
+                    </div>
+                    <a class="menuitem submenuheader" id="WealthAggr_BOTransactions">
+                        <img src="../Images/report.png" />
+                        BO Transactions</a>
+                    <div class="submenu" >
+                        <ul id="WealthAggr_BOTransactionsul">
+                            <%--<li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/JrnlVOU.aspx">Journal Transaction</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/OptionExpiry.aspx">Option Expiry</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Transactions/TradeSettlement.aspx">Trade Settlement</a></li>
+                            <li><a href="https://edost.karvymfs.com/KarvyboiWAAP/Enquiries/Positions.aspx">Secondary Market Enquiry</a></li>                            
+			    <li><a href="../MiddleOfficeAggregator/SettleMentAdjustMent.aspx">Settlement Adjustment</a></li>--%>
+                        </ul>
+                    </div>
+                    <%--<a class="menuitem submenuheader">
+                        <img src="../Images/report.png" />
+                        Valuation</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="../Masters/EquityManualCorporateAction.aspx">Manual Corporate Action</a></li>
+                            <li><a href="../Masters/DebtMarketValue.aspx">Manual Market Price</a></li>
+                        </ul>
+                    </div>--%>
+                    <a class="menuitem submenuheader" id="WealthAggr_UserManagement">
+                        <img src="../Images/report.png" />
+                        User Management</a>
+                    <div class="submenu">
+                        <ul id ="WealthAggr_UserManagementul">
+                           <%--<li><a href="../Admin/UserCreation.aspx" id="UserCreation">User creation</a></li>
+                            <li><a href="../Masters/UserGroupCreation.aspx" id="UserGroupCreation">User Group Creation</a></li>
+                            <li><a href="../Admin/ChangePassword.aspx">Change password</a></li>--%>
+                        </ul>
+                    </div>
+                     <%--<a class="menuitem submenuheader">
+                        <img src="../Images/report.png" />
+                       Value added services</a>
+                    <div class="submenu">
+                        <ul>
+                            <li><a href="../Admin/BulkEmails.aspx">Bulk mailer</a></li>
+                            
+                        </ul>
+                    </div>--%>
+                     <a class="menuitem submenuheader" id="WealthAggr_MisReports">
+                        <img src="../Images/report.png" />
+                        MIS Reports</a>
+                    <div class="submenu">
+                        <ul id ="WealthAggr_MisReportsul">
+                           <%--<li><a href="../Admin/UserCreation.aspx" id="UserCreation">User creation</a></li>
+                            <li><a href="../Masters/UserGroupCreation.aspx" id="UserGroupCreation">User Group Creation</a></li>
+                            <li><a href="../Admin/ChangePassword.aspx">Change password</a></li>--%>
+                        </ul>
+                    </div>
+
+                     <a class="menuitem submenuheader" id="BrokerageLink">
+                        <img src="../Images/report.png" />
+                       Brokerage</a>
+                    <div class="submenu">
+                        <ul id ="Brokerageul">
+                         
+                        </ul>
+                    </div>
+
+                    
+
+                </div>
+            </div>
+            <div class="main-content">
+                <div class="swipe-area"></div>
+                <a data-toggle=".container" id="sidebar-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </a>
+                <div class="content">
+                    <h1 id="PageTitle"></h1>
+                    <h2 id="subTitle"></h2>
+                    <div id="div_Content" class="f-box" style="min-height: 280px">
+                        <asp:ContentPlaceHolder ID="MainContent" runat="server">
+                        </asp:ContentPlaceHolder>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- SLIDER BAR LEFT END -->
+        <!--  <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.js"></script>-->
+        <!--<script src="js/jquery.meanmenu.js"></script> -->
+       <asp:HiddenField ID="hdn_userid" runat="server" />
+        <asp:HiddenField ID="hdnfld_ModID" runat="server" />
+        <asp:HiddenField ID="hdnpagelevel" ClientIDMode="Static" runat="server" />
+            <asp:HiddenField ID="hdnpageNlevel" ClientIDMode="Static" runat="server" />
+            <asp:HiddenField ID="hdnfldMenu" ClientIDMode="Static" runat="server" />
+              <asp:HiddenField ID="hidSessionFund" ClientIDMode="Static" runat="server" />
+            <div style="display:none;">
+            <asp:TextBox runat="server" ID="txtauto" MaxLength="50" CssClass="TextCls txtaln currency" ></asp:TextBox>
+        </div>
+            </div>
+    </form>
+</body>
+</html>
